@@ -1,0 +1,48 @@
+# Unity가 자동으로 다시 만드는 폴더 (용량이 크고 컴퓨터마다 다름)
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# IDE가 만드는 파일
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# 크래시 리포트, 빌드 산출물
+sysinfo.txt
+*.apk
+*.aab
+*.unitypackage
+*.app
+crashlytics-build.properties
+
+# Mixamo 애니메이션 원본은 공개 저장소에 올리지 않음 (각자 받아서 넣기)
+/Assets/VRMTest/Animations/*.fbx
+/Assets/VRMTest/Animations/*.fbx.meta
+/Assets/FoodTruckTest/Animations/Actions/*.fbx
+/Assets/FoodTruckTest/Animations/Actions/*.fbx.meta
+/Assets/FoodTruckTest/Animations/Locomotion/*.fbx
+/Assets/FoodTruckTest/Animations/Locomotion/*.fbx.meta
