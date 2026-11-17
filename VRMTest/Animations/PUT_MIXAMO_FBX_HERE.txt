@@ -1,0 +1,4 @@
+Mixamo에서 받은 FBX를 이 폴더에 넣으세요.
+파일 이름에 idle / walk / run 이 들어가 있어야 합니다. (선택: jump)
+예) Idle.fbx, Walking.fbx, Running.fbx, Jump.fbx
+그다음 Tools > VRM Test > Setup Mixamo Animations
