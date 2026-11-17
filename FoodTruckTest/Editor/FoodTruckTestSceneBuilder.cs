@@ -125,13 +125,17 @@ namespace CapstoneFoodTruckTest.EditorTools
                 placed[item] = go;
             }
 
-            if (!placeholder) AddMeshColliders(truck);
+            if (!placeholder)
+            {
+                AddMeshColliders(truck);
+                StopTruckAnimations(truck);
+            }
 
             // Lights: one inside the truck (the scene already has a directional light).
             var lamp = new GameObject("Truck Lamp").AddComponent<Light>();
             lamp.type = LightType.Point;
-            lamp.range = 10f;
-            lamp.intensity = 2.5f;
+            lamp.range = 7f;
+            lamp.intensity = 0.6f;   // keep this low: in Linear color space a point light this close washes everything out
             lamp.transform.position = new Vector3(roomCenter.x, floorY + 2.3f, roomCenter.z);
 
             // Camera: high above the front half of the truck (the model has no roof), looking down into it.
@@ -337,6 +341,24 @@ namespace CapstoneFoodTruckTest.EditorTools
             }
         }
 
+        /// <summary>
+        /// The .glb carries the fridge door Open/Close clips; glTF importers add an Animation/Animator that
+        /// plays them in a loop. Keep the doors still (closed) in the test scene.
+        /// </summary>
+        static void StopTruckAnimations(GameObject truck)
+        {
+            foreach (var anim in truck.GetComponentsInChildren<Animation>(true))
+            {
+                anim.playAutomatically = false;
+                anim.Stop();
+                anim.enabled = false;
+            }
+            foreach (var animator in truck.GetComponentsInChildren<Animator>(true))
+            {
+                animator.enabled = false;
+            }
+        }
+
         // ------------------------------------------------------------------ avatar (optional, uses VRMTest)
 
         static bool TrySpawnAvatar(Vector3 spawn, Camera cam)
@@ -366,6 +388,11 @@ namespace CapstoneFoodTruckTest.EditorTools
             cc.stepOffset = 0.3f;
 
             Component player = avatar.AddComponent(controller);
+
+            // Idle / walk / run + every action FBX in Animations/Actions.
+            var animController = FoodTruckAnimatorBuilder.Build(out var actions, out string animReport);
+            if (animController != null) FoodTruckAnimatorBuilder.Apply(avatar, animController, actions);
+            Debug.Log("[FoodTruckTest] " + animReport.Replace("\n", " "));
             Component follow = cam.gameObject.AddComponent(orbit);
             SetField(follow, "target", avatar.transform);
             SetField(follow, "distance", 2.2f);

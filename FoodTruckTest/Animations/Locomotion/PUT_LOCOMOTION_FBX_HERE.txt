@@ -1,0 +1,5 @@
+서기/걷기/뛰기(/점프) 애니메이션 FBX를 넣는 곳입니다.
+파일 이름에 idle, walk, run, jump 가 들어가면 자동으로 찾습니다. (예: Idle.fbx, Walking.fbx, Running.fbx)
+
+비어 있으면 Assets/VRMTest/Animations 의 Idle/Walking/Running 을 대신 씁니다.
+다른 걷기 모션으로 바꾸고 싶을 때만 여기에 넣으세요.

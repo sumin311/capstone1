@@ -1,0 +1,10 @@
+여기에 동작 애니메이션 FBX(Mixamo 등)를 넣으세요. 하위 폴더로 나눠도 됩니다.
+
+파일 이름 = 동작 이름. 이름 끝에 붙이는 표시로 재생 방식을 정합니다.
+  Wave.fbx                  한 번 재생하고 서기/걷기로 돌아감
+  Stir_loop.fbx             Stop() 하거나 캐릭터가 움직일 때까지 반복
+  CarryTray_upper_loop.fbx  상체만 움직임(걸으면서 쟁반 들기 등), 반복
+  Serve_upper.fbx           상체만, 한 번
+
+넣은 뒤 Unity 메뉴 Tools > FoodTruck Test > Rebuild Avatar Animations 를 누르면 끝.
+Mixamo에서 받을 때: Format FBX for Unity(.fbx), Skin "Without Skin"이면 충분, In Place 체크 권장.

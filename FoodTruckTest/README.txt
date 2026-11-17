@@ -19,6 +19,16 @@ Unity에 넣을 것 (모두 Assets 폴더 아래 아무 곳)
   (조작은 VRMTest와 같음. 트럭에 MeshCollider를 자동으로 붙여서 벽/카운터를 통과하지 않음)
 - 아바타 없이 둘러보려면 Tools > FoodTruck Test > Create Test Scene (Free Camera)
 
+아바타 애니메이션 (서기/걷기/뛰기 + 추가 동작)
+- 씬을 만들 때 자동으로 Animator Controller(Animations/FoodTruckAvatar.controller)를 만들어 아바타에 붙입니다.
+- 서기/걷기/뛰기: Animations/Locomotion 에 FBX가 없으면 Assets/VRMTest/Animations 의 Idle/Walking/Running 을 씁니다.
+  이동 속도에 맞춰 자동으로 섞입니다. (Speed 0 = 서기, 2 = 걷기, 5 = 뛰기)
+- 추가 동작: Animations/Actions 에 FBX를 넣고 Tools > FoodTruck Test > Rebuild Avatar Animations
+  파일 이름 끝 표시: _loop = 반복, _upper = 상체만 (걸으면서 재생 가능). 자세한 건 Actions 폴더의 안내 파일 참고.
+- Play 중 오른쪽 위 Animations 패널에서 버튼으로 재생 (M: 패널 숨기기, F1~F12: 앞의 12개 바로 재생)
+- 다른 스크립트에서: GetComponent<CapstoneFoodTruckTest.FoodTruckAvatarAnimator>().Play("동작이름"); / .Stop();
+  ActionStarted / ActionFinished 이벤트로 동작 시작/끝을 받을 수 있습니다.
+
 자유 카메라 조작
 - 마우스 오른쪽 드래그: 시점 회전
 - WASD: 이동, Q/E: 아래/위, Shift: 빠르게, 휠: 앞뒤, H: 도움말 숨기기
