@@ -50,6 +50,21 @@ namespace Chef24.EditorTools
                 }
             }
 
+            // 0b. The grill and its bowls.
+            {
+                var grill = Object.FindObjectOfType<GrillStation>();
+                if (grill != null)
+                {
+                    Vector3 c = grill.transform.position;
+                    Vector3 p0 = cam.transform.position;
+                    Quaternion r0 = cam.transform.rotation;
+                    cam.transform.position = c + new Vector3(-0.5f, 0.8f, -1.6f);
+                    cam.transform.LookAt(c + new Vector3(-0.5f, 0f, 0f));
+                    Shot(cam, outDir + "/0b_grill.png");
+                    cam.transform.SetPositionAndRotation(p0, r0);
+                }
+            }
+
             typeof(UIManager).GetMethod("Awake", Any).Invoke(ui, null);
             var canvas = ui.GetComponentInChildren<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceCamera;

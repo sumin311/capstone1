@@ -92,8 +92,14 @@ namespace Chef24.EditorTools
                 gs.emptyVisual = grill;
                 gs.cookingVisual = cooking;
                 gs.miniGame = miniGame;
-                Place("Batter_Bowl", stove, 0.2f, roomCenter, stations, BowlScale);
-                Place("Octopus_Bowl", stove, 0.3f, roomCenter, stations, BowlScale);
+                // Bowls stand in a row beside the grill with a small gap, so nothing overlaps.
+                Bounds grillBounds = RendererBounds(station.transform);
+                float cursor = AlongMin(grillBounds, stove) - 0.06f;
+                foreach (string bowl in new[] { "Octopus_Bowl", "Batter_Bowl" })
+                {
+                    GameObject go = Place(bowl, stove, 0.45f, roomCenter, stations, BowlScale);
+                    cursor = SlideTo(go, stove, cursor) - 0.06f;
+                }
             }
 
             {
@@ -327,6 +333,27 @@ namespace Chef24.EditorTools
             go.transform.position = axis * (along - Vector3.Dot(b.center, axis)) + depth * (dc - Vector3.Dot(b.center, depth))
                                     + Vector3.up * (surface.max.y - b.min.y);
             return go;
+        }
+
+        static Vector3 LongAxis(Bounds surface) => surface.size.x >= surface.size.z ? Vector3.right : Vector3.forward;
+
+        /// <summary>Lowest coordinate of <paramref name="b"/> along the surface's long axis.</summary>
+        static float AlongMin(Bounds b, Bounds surface) => Vector3.Dot(b.min, LongAxis(surface));
+
+        /// <summary>
+        /// Moves a placed model along the counter so its far edge touches <paramref name="maxEdge"/>.
+        /// Returns the model's near edge (where the next one in the row should end).
+        /// </summary>
+        static float SlideTo(GameObject go, Bounds surface, float maxEdge)
+        {
+            Vector3 axis = LongAxis(surface);
+            Bounds b = RendererBounds(go.transform);
+            float width = Vector3.Dot(b.size, axis);
+            float shift = maxEdge - Vector3.Dot(b.max, axis);
+            go.transform.position += axis * shift;
+            float minEdge = maxEdge - width;
+            if (minEdge < Vector3.Dot(surface.min, axis)) Debug.LogWarning("[Chef24] " + go.name + " hangs over the end of the counter.");
+            return minEdge;
         }
 
         /// <summary>Top of a counter at fraction t along its long side, centred across its depth.</summary>

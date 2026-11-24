@@ -576,10 +576,10 @@ namespace Chef24
             // ---- Title: the live scene is the backdrop, a warm scrim keeps text readable.
             startScreen = MakeScreen("Title Screen", 0.5f);
             var st = (RectTransform)startScreen.transform;
-            var title = Txt("Title", st, new Vector2(0, 0.64f), new Vector2(1, 0.64f), new Vector2(0, -80), new Vector2(0, 80), 118, TextAlignmentOptions.Center, Palette.Cream, Style.TitleOutline);
+            var title = Txt("Title", st, new Vector2(0, 0.81f), new Vector2(1, 0.81f), new Vector2(0, -80), new Vector2(0, 80), 118, TextAlignmentOptions.Center, Palette.Cream, Style.TitleOutline);
             title.text = "등록금은 장사로 갚는다";
-            startStage = Txt("Stage", st, new Vector2(0, 0.52f), new Vector2(1, 0.52f), new Vector2(0, -30), new Vector2(0, 30), 36, TextAlignmentOptions.Center, Palette.Cream, Style.BodyOutline);
-            var how = MakeCard("How To", st, new Vector2(0.5f, 0.31f), new Vector2(0.5f, 0.31f), Vector2.zero, new Vector2(1020, 300), new Vector2(0.5f, 0.5f), Palette.Cream);
+            startStage = Txt("Stage", st, new Vector2(0, 0.69f), new Vector2(1, 0.69f), new Vector2(0, -30), new Vector2(0, 30), 36, TextAlignmentOptions.Center, Palette.Cream, Style.BodyOutline);
+            var how = MakeCard("How To", st, new Vector2(0.5f, 0.47f), new Vector2(0.5f, 0.47f), Vector2.zero, new Vector2(1020, 300), new Vector2(0.5f, 0.5f), Palette.Cream);
             Txt("Text", how.rect, Vector2.zero, Vector2.one, new Vector2(44, 22), new Vector2(-44, -22), 26, TextAlignmentOptions.Left, Palette.Brown, Style.Body).text =
                 "1.  손님을 보고 " + Key("E") + " 주문 받기   (" + Key("R") + " 거절)\n" +
                 "2.  그릴에서 " + Key("E") + ", 움직이는 막대를 " + Key("Space") + " 로 초록 칸에 멈추기\n" +
@@ -587,9 +587,9 @@ namespace Chef24
                 "4.  주문표대로 타코야끼 소스, 마요네즈, 파 넣기  (<color=" + Palette.Html(Palette.Red) + ">빼기</color> 표시는 넣지 말기)\n" +
                 "5.  손님을 보고 " + Key("E") + " 로 건네기\n" +
                 "6.  잠깐 둘 땐 카운터의 <color=" + Palette.Html(Palette.Mint) + ">초록 접시 자리</color>, 못 쓰는 건 쓰레기통";
-            startPrompt = Txt("Prompt", st, new Vector2(0, 0.135f), new Vector2(1, 0.135f), new Vector2(0, -24), new Vector2(0, 24), 30, TextAlignmentOptions.Center, Palette.Cream, Style.BodyOutline);
+            startPrompt = Txt("Prompt", st, new Vector2(0, 0.27f), new Vector2(1, 0.27f), new Vector2(0, -24), new Vector2(0, 24), 30, TextAlignmentOptions.Center, Palette.Cream, Style.BodyOutline);
             startPrompt.text = "Enter 를 눌러 장사 시작";
-            Button(st, "장사 시작", new Vector2(0.5f, 0.055f), Vector2.zero, new Vector2(400, 76), () => onStart?.Invoke());
+            Button(st, "장사 시작", new Vector2(0.5f, 0.19f), Vector2.zero, new Vector2(400, 76), () => onStart?.Invoke());
             startScreen.gameObject.SetActive(false);
 
             // ---- Pause
