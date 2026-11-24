@@ -68,7 +68,7 @@ namespace Chef24
                         state = State.Ready;
                         UpdateVisual();
                         if (GM.State == GameState.Playing) GM.player.SetLocked(false);
-                        UIManager.Instance?.Toast("타코야끼 완성! (" + Names.Of(readyGrade) + ")", Color.white);
+                        UIManager.Instance?.Toast("타코야끼 완성! (" + Names.Of(readyGrade) + ")", Palette.Mint);
                     });
                     UpdateVisual();
                     break;
@@ -95,13 +95,13 @@ namespace Chef24
             if (!warned && age > warnAfter)
             {
                 warned = true;
-                UIManager.Instance?.Toast("그릴 위 타코야끼가 타려고 해요!", new Color(1f, 0.6f, 0.3f));
+                UIManager.Instance?.Toast("그릴 위 타코야끼가 타려고 해요!", Palette.Amber);
             }
             if (age > burnAfter)
             {
                 state = State.Burnt;
                 UpdateVisual();
-                UIManager.Instance?.Toast("타코야끼가 타 버렸어요...", new Color(1f, 0.45f, 0.45f));
+                UIManager.Instance?.Toast("타코야끼가 타 버렸어요...", Palette.Tomato);
             }
         }
 

@@ -19,6 +19,8 @@ namespace Chef24.EditorTools
         const string ScenePath = Root + "/Chef24MVP.unity";
         const string MaterialFolder = Root + "/Materials";
         const string CustomerAnimatorPath = "Assets/FoodTruckTest/Animations/FoodTruckAvatar.controller";
+        /// <summary>World position of the trash bin (x, z used; it stands on the floor).</summary>
+        static readonly Vector3 TrashPosition = new Vector3(0.4f, 0.31f, 0.9f);
 
         [MenuItem("Tools/Chef24/Build MVP Scene")]
         public static void Build()
@@ -109,14 +111,13 @@ namespace Chef24.EditorTools
                 }
             }
 
-            if (PartBounds(truck, "Storage_Cabinet", out Bounds storage))
             {
-                Vector3 toRoom = Flat(roomCenter - storage.center).normalized;
                 var bin = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 bin.name = "Trash Bin";
                 bin.transform.SetParent(stations, false);
                 bin.transform.localScale = new Vector3(0.38f, 0.6f, 0.38f);
-                bin.transform.position = new Vector3(storage.center.x, floorY + 0.3f, storage.center.z) + toRoom * (Mathf.Min(storage.size.x, storage.size.z) * 0.5f + 0.3f);
+                // Position chosen by hand in the editor during play testing (2026-11-24).
+                bin.transform.position = new Vector3(TrashPosition.x, floorY + 0.3f, TrashPosition.z);
                 bin.GetComponent<Renderer>().sharedMaterial = MakeMaterial("Trash", new Color(0.22f, 0.24f, 0.27f));
                 bin.AddComponent<TrashBin>();
             }

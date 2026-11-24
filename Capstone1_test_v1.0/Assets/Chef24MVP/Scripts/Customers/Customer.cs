@@ -106,7 +106,7 @@ namespace Chef24
         void Reject()
         {
             Say("아... 알겠어요.", 2f);
-            UIManager.Instance?.Toast("주문 거절", new Color(1f, 0.8f, 0.5f));
+            UIManager.Instance?.Toast("주문 거절", Palette.Amber);
             Leave();
         }
 

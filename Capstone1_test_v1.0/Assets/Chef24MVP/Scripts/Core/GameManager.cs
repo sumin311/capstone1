@@ -60,7 +60,7 @@ namespace Chef24
             clock?.StartDay();
             player?.SetLocked(false);
             UIManager.Instance?.HideStart();
-            UIManager.Instance?.Toast(stageName + " 영업 시작! 손님을 맞이하세요.", new Color(1f, 0.9f, 0.5f));
+            UIManager.Instance?.Toast(stageName + " 영업 시작! 손님을 맞이하세요.", Palette.Amber);
         }
 
         void Update()
@@ -88,7 +88,7 @@ namespace Chef24
         {
             closedAt = Time.time;
             spawner?.StopSpawning();
-            UIManager.Instance?.Toast("오후 7시, 영업 종료! 남은 손님만 응대하세요.", new Color(1f, 0.75f, 0.4f));
+            UIManager.Instance?.Toast("오후 7시, 영업 종료! 남은 손님만 응대하세요.", Palette.Amber);
         }
 
         // ---------------------------------------------------------------- money
@@ -97,19 +97,19 @@ namespace Chef24
         {
             Sales += amount;
             SoldCount++;
-            UIManager.Instance?.Toast(message + "  +" + Names.Won(amount), new Color(0.5f, 1f, 0.55f));
+            UIManager.Instance?.Toast(message + "  +" + Names.Won(amount), Palette.Leaf);
         }
 
         public void AddWaste(string reason)
         {
             Waste += wasteCost;
-            UIManager.Instance?.Toast(reason + "  폐기 -" + Names.Won(wasteCost), new Color(1f, 0.45f, 0.45f));
+            UIManager.Instance?.Toast(reason + "  폐기 -" + Names.Won(wasteCost), Palette.Tomato);
         }
 
         public void CustomerLost(Customer c, string message)
         {
             LostCustomers++;
-            UIManager.Instance?.Toast(message, new Color(1f, 0.6f, 0.4f));
+            UIManager.Instance?.Toast(message, Palette.Amber);
         }
 
         public void RemoveOrder(Order o) => AcceptedOrders.Remove(o);
