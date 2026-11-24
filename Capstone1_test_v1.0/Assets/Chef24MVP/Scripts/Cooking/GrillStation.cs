@@ -30,7 +30,23 @@ namespace Chef24
 
         GameManager GM => GameManager.Instance;
 
-        void Start() => UpdateVisual();
+        ParticleSystem steam, smoke;
+
+        void Start()
+        {
+            // Effects sit just above the grill plate: steam while cooking / ready, smoke when it is about to burn or burnt.
+            var rs = GetComponentsInChildren<Renderer>();
+            if (rs.Length > 0)
+            {
+                Bounds b = rs[0].bounds;
+                foreach (var r in rs) b.Encapsulate(r.bounds);
+                var top = new Vector3(b.center.x, b.max.y, b.center.z);
+                var area = new Vector2(b.size.x * 0.6f, b.size.z * 0.5f);
+                steam = Vfx.Column("Steam", transform, top, area);
+                smoke = Vfx.Column("Smoke", transform, top, area, smoke: true);
+            }
+            UpdateVisual();
+        }
 
         public string GetPrompt(PlayerHands hands)
         {
@@ -90,6 +106,7 @@ namespace Chef24
 
         void Update()
         {
+            UpdateEffects();
             if (state != State.Ready) return;
             float age = Time.time - readySince;
             if (!warned && age > warnAfter)
@@ -105,6 +122,14 @@ namespace Chef24
             }
         }
 
+        void UpdateEffects()
+        {
+            bool almostBurnt = state == State.Ready && Time.time - readySince > warnAfter;
+            Vfx.SetColumn(steam, state == State.Cooking || (state == State.Ready && !almostBurnt), state == State.Cooking ? 3f : 6f, Vfx.SteamColor);
+            Vfx.SetColumn(smoke, almostBurnt || state == State.Burnt, state == State.Burnt ? 10f : 6f,
+                          state == State.Burnt ? Vfx.BurntSmokeColor : Vfx.WarnSmokeColor);
+        }
+
         void UpdateVisual()
         {
             bool showBalls = state == State.Ready || state == State.Burnt || state == State.Cooking;
@@ -112,13 +137,20 @@ namespace Chef24
             if (cookingVisual != null)
             {
                 cookingVisual.SetActive(showBalls);
-                // Darken the balls when burnt.
+                // Darken only the takoyaki (not the grill body) when burnt; otherwise use the material's own colour.
                 foreach (var r in cookingVisual.GetComponentsInChildren<Renderer>())
                 {
-                    if (r.transform == cookingVisual.transform) continue;
+                    var m = r.sharedMaterial;
+                    if (m == null || m.name.StartsWith("Grill")) continue;
+                    if (state != State.Burnt)
+                    {
+                        r.SetPropertyBlock(null);
+                        continue;
+                    }
+                    Color baseColor = m.HasProperty("_Color") ? m.GetColor("_Color") : Color.white;
+                    Color c = baseColor * new Color(0.3f, 0.22f, 0.16f, 1f);
                     var block = new MaterialPropertyBlock();
                     r.GetPropertyBlock(block);
-                    Color c = state == State.Burnt ? new Color(0.25f, 0.18f, 0.12f) : Color.white;
                     block.SetColor("_Color", c);
                     block.SetColor("_BaseColor", c);
                     r.SetPropertyBlock(block);

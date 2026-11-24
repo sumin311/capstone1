@@ -72,3 +72,14 @@ UI (2026-11-24 개편)
 - 손에 드는 타코야끼, 접시 자리에 놓인 음식도 툰 재질로 바뀜 (Toon Material Map)
 - 손님(VRM)은 원래 MToon 셰이더가 툰 스타일이라 그대로 둠
 - 밝기 조절: 툰 재질의 Ambient Strength(주변광), Lamp Strength(실내 조명), Shadow Tint(그림자색), Outline Width
+
+시각 효과 (2026-11-24, Scripts/UI/Vfx.cs, 코드로 만든 파티클, 에셋 없음)
+- 그릴: 굽는 중에는 김 조금, 다 익으면 김 많이, 타기 직전(완성 후 15초)부터 회색 연기, 타면 검은 연기 (갈색 테두리 뭉게구름 모양)
+- 판매 성공 별 효과는 2026-11-24에 뺌
+- 버그 수정: 그릴이 평소에도 재질 색을 흰색으로 덮어쓰던 문제. 이제 탈 때만 타코야끼(그릴 본체 제외)를 어둡게 칠함
+
+파티클 그림 (2026-11-24, Kenney CC0)
+- Vfx/Resources: 김(VfxSteamSheet, White puff 4장), 탄 연기(VfxSmokeSheet, Black smoke 4장)
+  출처: Kenney "Smoke Particles" (opengameart.org에 Kenney가 올린 것), 라이선스 CC0 → Vfx/Kenney-Smoke-License.txt
+- 재질(Vfx Steam/Smoke.mat)은 Build MVP Scene이 만듦. 파일이 없으면 코드로 그린 만화 모양으로 대신 나옴
+- 주의: Linear 색 공간이라 파티클 재질 _TintColor는 sRGB 0.735(=선형 0.5)로 넣어야 원래 밝기로 보임

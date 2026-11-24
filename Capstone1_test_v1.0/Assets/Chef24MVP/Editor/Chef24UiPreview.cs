@@ -61,6 +61,20 @@ namespace Chef24.EditorTools
                     cam.transform.position = c + new Vector3(-0.5f, 0.8f, -1.6f);
                     cam.transform.LookAt(c + new Vector3(-0.5f, 0f, 0f));
                     Shot(cam, outDir + "/0b_grill.png");
+
+                    // Effects: run the grill's own Start (creates its steam / smoke), then simulate them for a moment.
+                    typeof(GrillStation).GetMethod("Start", Any).Invoke(grill, null);
+                    var steam = (ParticleSystem)typeof(GrillStation).GetField("steam", Any).GetValue(grill);
+                    var smoke = (ParticleSystem)typeof(GrillStation).GetField("smoke", Any).GetValue(grill);
+                    Vfx.SetColumn(steam, true, 6f, Vfx.SteamColor);
+                    steam.Simulate(2.5f, true, true);
+                    Shot(cam, outDir + "/0c_steam.png");
+                    steam.Clear();
+                    Vfx.SetColumn(steam, false, 0f, Vfx.SteamColor);
+                    Vfx.SetColumn(smoke, true, 10f, Vfx.BurntSmokeColor);
+                    smoke.Simulate(2.5f, true, true);
+                    Shot(cam, outDir + "/0d_smoke.png");
+                    smoke.Clear();
                     cam.transform.SetPositionAndRotation(p0, r0);
                 }
             }

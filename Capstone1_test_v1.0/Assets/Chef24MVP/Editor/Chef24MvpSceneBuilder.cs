@@ -78,6 +78,7 @@ namespace Chef24.EditorTools
 
             // ---------------------------------------------------------------- stations
             var fonts = Chef24Fonts.Ensure();
+            Chef24VfxAssets.Ensure();
             var stations = new GameObject("Stations").transform;
             var game = new GameObject("Game");
             var miniGame = game.AddComponent<TimingMiniGame>();
