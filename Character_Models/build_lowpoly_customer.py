@@ -163,14 +163,32 @@ def shell_frame(phi, elev, lift, C=None, S=None):
     return p, n
 
 
+ROOT_THIN = 0.1                                     # lock thickness at the root (1 = full)
+FRAME_BLEND = 0.45                                  # share of a lock's length over which it moves from the hair shell to its own frame
+ROOT_RAMP = 1.6                                    # thickness grows over this many tuck lengths: a wedge, not a step
+
+
 def strand(phi0, elev0, drop, curl, width, lift=0.012, steps=8, tuck=0.3, flare=0.0, sink=0.0, taper=0.7, sink_from=0.6, flat=0.0, frame=(None, None)):
     """A lock from (phi0, elev0) falling by `drop` radians of elevation while sweeping `curl` radians sideways.
     Cross-section is a flattened hexagon (wide along the head, thin off it), tapering to a point."""
-    pts, norms = [], []
+    pts, norms, roots = [], [], []
     elev0, drop = elev0 + tuck, drop + tuck        # roots start further up, hidden under the lid
+    tt = tuck / drop                               # share of the length that is tucked under the lid
     for i in range(steps + 1):
         t = i / steps
-        p, n = shell_frame(phi0 + curl * t * t, elev0 - drop * t, lift - 0.008 * t - sink * max(0.0, (t - sink_from) / (1 - sink_from)) ** 1.5 + flare * t ** 3, *frame)
+        # tucked root: starts almost flat and thickens past the lid edge like a wedge, so it neither pokes
+        # through the lid nor steps out from under it
+        r = min(1.0, t / (tt * ROOT_RAMP)) if tt > 0 else 1.0
+        r = r * r * (3 - 2 * r)
+        roots.append(r)
+        fc, fs = frame
+        if fc is not None:
+            # a lock laid on another surface (the back chunks on the head) starts on the hair shell, so it
+            # meets the scalp cap and lid at the crown, then settles onto that surface further down
+            g = min(1.0, t / FRAME_BLEND)
+            g = g * g * (3 - 2 * g)
+            fc, fs = HAIR_C.lerp(fc, g), HAIR_S.lerp(fs, g)
+        p, n = shell_frame(phi0 + curl * t * t, elev0 - drop * t, lift - 0.008 * t - sink * max(0.0, (t - sink_from) / (1 - sink_from)) ** 1.5 + flare * t ** 3, fc, fs)
         pts.append(p)
         norms.append(n)
     bm = bmesh.new()
@@ -181,6 +199,7 @@ def strand(phi0, elev0, drop, curl, width, lift=0.012, steps=8, tuck=0.3, flare=
         side = fwd.cross(n).normalized()
         up = side.cross(fwd).normalized()
         w = width * (1 - t) ** taper * (0.85 + 0.3 * math.sin(math.pi * min(1, t * 1.6)))
+        thick = ROOT_THIN + (1 - ROOT_THIN) * roots[i]   # thin while under the lid
         if i == steps:
             rings.append([bm.verts.new(p)])
             break
@@ -188,7 +207,7 @@ def strand(phi0, elev0, drop, curl, width, lift=0.012, steps=8, tuck=0.3, flare=
         for k in range(6):
             a_ = k * math.pi / 3
             off = math.cos(a_) * w
-            ring.append(bm.verts.new(p + side * off + up * math.sin(a_) * w * 0.34 * (1 - flat * t) - n * (off * off / (2 * 0.29))))
+            ring.append(bm.verts.new(p + side * off + up * math.sin(a_) * w * 0.34 * (1 - flat * t) * thick - n * (off * off / (2 * 0.29))))
         rings.append(ring)
     for r0, r1 in zip(rings, rings[1:]):
         for k in range(6):
@@ -243,6 +262,8 @@ for phi, drop in ((2.1, 1.6), (2.78, 1.8), (-2.78, 1.8), (-2.1, 1.6)):
            frame=HEAD_FRAME)
 
 # lid: a smooth cap over the top of the head; the locks come out from under its edge
+LID_EDGE = 1.0                                      # lid scale at its edge (on the hair shell, under the locks)
+LID_TOP = 1.07                                      # lid scale at the crown: a little volume on top
 LID_KEYS = ((0.0, 0.9), (0.9, 0.84), (1.25, 0.72), (1.6, 0.7), (2.2, 0.76), (math.pi, 0.8))
 
 
@@ -265,8 +286,11 @@ for v in bm.verts:
     phi, elev = polar(v)
     elev = max(elev, lid_line(phi))
     edge = lid_line(phi)
-    k = min(1.0, max(0.0, (elev - edge) / 0.3))
-    swell = 1.0 + 0.07 * k * k * (3 - 2 * k)       # at the edge the lid sits on the scalp, under the locks
+    # at the back the lid eases up over a longer stretch, so the big back chunks blend into it
+    b = min(1.0, max(0.0, (abs(phi) - 1.8) / 0.6))
+    b = b * b * (3 - 2 * b)
+    k = min(1.0, max(0.0, (elev - edge) / (0.3 + 0.25 * b)))
+    swell = LID_EDGE + (LID_TOP - LID_EDGE) * k * k * (3 - 2 * k)  # edge on the scalp, crown swells out for volume
     v.co = Vector((math.cos(elev) * math.sin(phi), -math.cos(elev) * math.cos(phi), math.sin(elev))) * swell
 bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-4)
 bm.to_mesh(lid.data)
