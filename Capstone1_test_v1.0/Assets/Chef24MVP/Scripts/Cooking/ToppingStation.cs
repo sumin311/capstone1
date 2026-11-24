@@ -9,7 +9,7 @@ namespace Chef24
 
         public string GetPrompt(PlayerHands hands)
         {
-            string n = Names.Of(topping);
+            string n = Names.Full(topping);
             if (hands.IsEmpty) return n + " (타코야끼를 들고 오세요)";
             if (hands.Held.toppings.Contains(topping)) return n + ": 이미 넣었어요";
             return "E: " + n + " 넣기";

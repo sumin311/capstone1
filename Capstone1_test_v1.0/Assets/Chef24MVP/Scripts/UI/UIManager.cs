@@ -366,6 +366,11 @@ namespace Chef24
                 icon.GetComponent<Image>().type = Image.Type.Simple;
                 t.chipIcon[i] = icon.GetComponent<Image>();
                 t.chipText[i] = Txt("Label", chip, Vector2.zero, Vector2.one, new Vector2(30, 0), new Vector2(-6, 0), 21, TextAlignmentOptions.Center, Palette.Brown, Style.Body);
+                // Names like "타코 소스 빼야 해요!" are long for a chip: shrink to fit instead of overflowing.
+                t.chipText[i].enableWordWrapping = false;
+                t.chipText[i].enableAutoSizing = true;
+                t.chipText[i].fontSizeMin = 13;
+                t.chipText[i].fontSizeMax = 21;
             }
 
             var track = Panel("Patience", r, new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 10), new Vector2(-40, 8), new Vector2(0.5f, 0), Palette.CreamDark, pill);
@@ -394,8 +399,8 @@ namespace Chef24
                 Color bg, fg;
                 Sprite icon;
                 string label;
-                if (excluded && has) { bg = Palette.Red; fg = Palette.Cream; icon = iconCross; label = name + " 빼야 해요!"; }
-                else if (excluded) { bg = Palette.WithAlpha(Palette.Red, 0.16f); fg = Palette.Red; icon = iconCross; label = name + " 빼기"; }
+                if (excluded && has) { bg = Palette.Red; fg = Palette.Cream; icon = iconCross; label = name + "!"; }
+                else if (excluded) { bg = Palette.WithAlpha(Palette.Red, 0.16f); fg = Palette.Red; icon = iconCross; label = name; }
                 else if (has) { bg = Palette.Leaf; fg = Palette.Cream; icon = iconCheck; label = name; }
                 else { bg = Palette.CreamDark; fg = Palette.Brown; icon = null; label = name; }
                 t.chipBg[i].color = bg;
@@ -579,7 +584,7 @@ namespace Chef24
                 "1.  손님을 보고 " + Key("E") + " 주문 받기   (" + Key("R") + " 거절)\n" +
                 "2.  그릴에서 " + Key("E") + ", 움직이는 막대를 " + Key("Space") + " 로 초록 칸에 멈추기\n" +
                 "3.  다 익으면 그릴에서 " + Key("E") + " 로 담기  (오래 두면 타요!)\n" +
-                "4.  주문표대로 소스, 마요, 파 넣기  (<color=" + Palette.Html(Palette.Red) + ">빼기</color> 표시는 넣지 말기)\n" +
+                "4.  주문표대로 타코야끼 소스, 마요네즈, 파 넣기  (<color=" + Palette.Html(Palette.Red) + ">빼기</color> 표시는 넣지 말기)\n" +
                 "5.  손님을 보고 " + Key("E") + " 로 건네기\n" +
                 "6.  잠깐 둘 땐 카운터의 <color=" + Palette.Html(Palette.Mint) + ">초록 접시 자리</color>, 못 쓰는 건 쓰레기통";
             startPrompt = Txt("Prompt", st, new Vector2(0, 0.135f), new Vector2(1, 0.135f), new Vector2(0, -24), new Vector2(0, 24), 30, TextAlignmentOptions.Center, Palette.Cream, Style.BodyOutline);

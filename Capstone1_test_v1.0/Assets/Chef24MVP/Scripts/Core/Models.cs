@@ -14,12 +14,24 @@ namespace Chef24
     {
         public static readonly Topping[] AllToppings = { Topping.Sauce, Topping.Mayo, Topping.GreenOnion };
 
+        /// <summary>Short name for order chips, bubbles and the held dish ("타코 소스", "마요", "파").</summary>
         public static string Of(Topping t)
         {
             switch (t)
             {
-                case Topping.Sauce: return "소스";
+                case Topping.Sauce: return "타코 소스";
                 case Topping.Mayo: return "마요";
+                default: return "파";
+            }
+        }
+
+        /// <summary>Full name for name tags and prompts ("타코야끼 소스", "마요네즈", "파").</summary>
+        public static string Full(Topping t)
+        {
+            switch (t)
+            {
+                case Topping.Sauce: return "타코야끼 소스";
+                case Topping.Mayo: return "마요네즈";
                 default: return "파";
             }
         }
@@ -120,8 +132,8 @@ namespace Chef24
         /// <summary>Rich text for the order list: needed toppings, excluded ones in red.</summary>
         public string ToppingsRichText()
         {
-            return string.Join(" ", menu.toppings.Select(t =>
-                excluded.Contains(t) ? "<color=#ff5a5a>" + Names.Of(t) + "X</color>" : Names.Of(t)));
+            return string.Join(",  ", menu.toppings.Select(t =>
+                excluded.Contains(t) ? "<color=" + Palette.Html(Palette.Red) + ">" + Names.Of(t) + " 빼기</color>" : Names.Of(t)));
         }
     }
 }

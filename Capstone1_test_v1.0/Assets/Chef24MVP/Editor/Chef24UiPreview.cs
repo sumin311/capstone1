@@ -28,6 +28,28 @@ namespace Chef24.EditorTools
 
             var ui = Object.FindObjectOfType<UIManager>();
             var cam = GameObject.Find("Player Camera").GetComponent<Camera>();
+
+            // 0. The front counter (toppings, name tags, plate spots), seen from inside the truck, before any UI exists.
+            {
+                var targets = new List<Transform>();
+                foreach (var s in Object.FindObjectsOfType<ToppingStation>()) targets.Add(s.transform);
+                foreach (var s in Object.FindObjectsOfType<HoldingSpot>()) targets.Add(s.transform);
+                if (targets.Count > 0)
+                {
+                    Vector3 c = Vector3.zero;
+                    foreach (var t in targets) c += t.position;
+                    c /= targets.Count;
+                    Vector3 p0 = cam.transform.position;
+                    Quaternion r0 = cam.transform.rotation;
+                    cam.transform.position = c + new Vector3(0f, 0.75f, 1.5f);
+                    cam.transform.LookAt(c);
+                    foreach (var l in Object.FindObjectsOfType<WorldLabel>())
+                        l.transform.rotation = Quaternion.LookRotation(l.transform.position - cam.transform.position, Vector3.up);
+                    Shot(cam, outDir + "/0_counter.png");
+                    cam.transform.SetPositionAndRotation(p0, r0);
+                }
+            }
+
             typeof(UIManager).GetMethod("Awake", Any).Invoke(ui, null);
             var canvas = ui.GetComponentInChildren<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceCamera;

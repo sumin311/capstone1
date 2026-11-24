@@ -77,6 +77,7 @@ namespace Chef24.EditorTools
             }
 
             // ---------------------------------------------------------------- stations
+            var fonts = Chef24Fonts.Ensure();
             var stations = new GameObject("Stations").transform;
             var game = new GameObject("Game");
             var miniGame = game.AddComponent<TimingMiniGame>();
@@ -91,24 +92,8 @@ namespace Chef24.EditorTools
                 gs.emptyVisual = grill;
                 gs.cookingVisual = cooking;
                 gs.miniGame = miniGame;
-                Place("Batter_Bowl", stove, 0.22f, roomCenter, stations);
-                Place("Octopus_Bowl", stove, 0.3f, roomCenter, stations);
-            }
-
-            if (PartBounds(truck, "Prep_Cabinet", out Bounds prep))
-            {
-                (string model, Topping topping, float t)[] tops =
-                {
-                    ("Takoyaki_Sauce_Bottle", Topping.Sauce, 0.25f),
-                    ("Mayo_Bottle", Topping.Mayo, 0.45f),
-                    ("GreenOnion_Bowl", Topping.GreenOnion, 0.7f),
-                };
-                foreach (var (model, topping, t) in tops)
-                {
-                    GameObject go = Place(model, prep, t, roomCenter, null);
-                    var station = MakeStation(Names.Of(topping) + " Station", stations, go);
-                    station.AddComponent<ToppingStation>().topping = topping;
-                }
+                Place("Batter_Bowl", stove, 0.2f, roomCenter, stations, BowlScale);
+                Place("Octopus_Bowl", stove, 0.3f, roomCenter, stations, BowlScale);
             }
 
             {
@@ -127,7 +112,22 @@ namespace Chef24.EditorTools
             {
                 Material spotMat = MakeMaterial("Holding Spot", new Color(0.62f, 0.86f, 0.78f));
                 GameObject boat = FindModel("Takoyaki_Boat");
-                float[] along = { 0.35f, 0.65f };
+                // Toppings first (left of the service window), then the plate spots in front of the window.
+                (string model, Topping topping, float t, float scale)[] tops =
+                {
+                    ("Takoyaki_Sauce_Bottle", Topping.Sauce, 0.08f, 1f),
+                    ("Mayo_Bottle", Topping.Mayo, 0.2f, 1f),
+                    ("GreenOnion_Bowl", Topping.GreenOnion, 0.33f, BowlScale),
+                };
+                foreach (var (model, topping, t, scale) in tops)
+                {
+                    GameObject go = Place(model, counter, t, roomCenter, null, scale);
+                    var station = MakeStation(Names.Of(topping) + " Station", stations, go);
+                    station.AddComponent<ToppingStation>().topping = topping;
+                    AddLabel(station, Names.Full(topping), fonts);
+                }
+
+                float[] along = { 0.55f, 0.66f };
                 for (int i = 0; i < along.Length; i++)
                 {
                     var spot = new GameObject("Holding Spot " + (i + 1));
@@ -194,7 +194,6 @@ namespace Chef24.EditorTools
             spawner.exitPoint = exit;
             spawner.faceDirection = -frontDir;
             var ui = game.AddComponent<UIManager>();
-            var fonts = Chef24Fonts.Ensure();
             ui.bodyFont = fonts.body;
             ui.titleFont = fonts.title;
             ui.bodyOutline = fonts.bodyOutline;
@@ -278,15 +277,37 @@ namespace Chef24.EditorTools
         /// </summary>
         const float PropScale = 2.2f;
 
+        /// <summary>Bowls read small next to the bottles, so they get this on top of PropScale.</summary>
+        const float BowlScale = 1.5f;
+
+        /// <summary>A name tag floating above a station, always turned to the camera.</summary>
+        static void AddLabel(GameObject station, string text, Chef24Fonts.Set fonts)
+        {
+            Bounds b = RendererBounds(station.transform);
+            var go = new GameObject("Label");
+            go.transform.SetParent(station.transform, true);
+            go.transform.position = new Vector3(b.center.x, b.max.y + 0.09f, b.center.z);
+            var tmp = go.AddComponent<TMPro.TextMeshPro>();
+            if (fonts.body != null) tmp.font = fonts.body;
+            if (fonts.bodyOutline != null) tmp.fontSharedMaterial = fonts.bodyOutline;
+            tmp.text = text;
+            tmp.fontSize = 0.8f;
+            tmp.color = Palette.Cream;
+            tmp.alignment = TMPro.TextAlignmentOptions.Center;
+            tmp.enableWordWrapping = false;
+            tmp.rectTransform.sizeDelta = new Vector2(1.2f, 0.2f);
+            go.AddComponent<WorldLabel>();
+        }
+
         /// <summary>Puts a model on top of a counter at fraction t along its long side, facing the room.</summary>
-        static GameObject Place(string model, Bounds surface, float t, Vector3 roomCenter, Transform parent)
+        static GameObject Place(string model, Bounds surface, float t, Vector3 roomCenter, Transform parent, float extraScale = 1f)
         {
             GameObject asset = FindModel(model);
             if (asset == null) { Debug.LogWarning("[Chef24] Missing model " + model); return new GameObject(model + " (missing)"); }
             var go = (GameObject)PrefabUtility.InstantiatePrefab(asset);
             go.name = model;
             if (parent != null) go.transform.SetParent(parent, false);
-            go.transform.localScale = go.transform.localScale * PropScale;
+            go.transform.localScale = go.transform.localScale * PropScale * extraScale;
 
             bool alongX = surface.size.x >= surface.size.z;
             Vector3 axis = alongX ? Vector3.right : Vector3.forward;
