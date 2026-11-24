@@ -11,6 +11,8 @@ namespace Chef24
         [Tooltip("Model shown while a dish sits here (Takoyaki_Boat).")]
         public GameObject dishPrefab;
         public float dishScale = 1.6f;
+        [Tooltip("Swaps the dish model's materials for their toon versions.")]
+        public ToonMaterialMap toonMap;
 
         public Dish Stored { get; private set; }
         public bool IsEmpty => Stored == null;
@@ -46,6 +48,7 @@ namespace Chef24
                 visual.transform.localScale = Vector3.one * dishScale;
                 visual.transform.localPosition = Vector3.zero;
                 foreach (var c in visual.GetComponentsInChildren<Collider>()) Destroy(c);
+                if (toonMap != null) toonMap.Apply(visual);
                 // Sit the model on the counter top: this transform's position is the counter surface.
                 var rs = visual.GetComponentsInChildren<Renderer>();
                 if (rs.Length > 0)

@@ -205,6 +205,12 @@ namespace Chef24.EditorTools
             gm.hands = hands;
             gm.spawner = spawner;
 
+            // One toon look for the whole frame (customers keep their VRM MToon, already toon shaded).
+            var toonMap = Chef24Toonify.Apply(scene.GetRootGameObjects(), new[] { FindModel("Takoyaki_Boat") });
+            Chef24Toonify.ApplySky();
+            hands.toonMap = toonMap;
+            foreach (var spot in stations.GetComponentsInChildren<HoldingSpot>()) spot.toonMap = toonMap;
+
             EditorSceneManager.SaveScene(scene, ScenePath);
             AddToBuildSettings(ScenePath);
             Selection.activeGameObject = game;

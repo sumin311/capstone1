@@ -7,6 +7,8 @@ namespace Chef24
     {
         [Tooltip("Model shown while holding takoyaki (Takoyaki_Boat).")]
         public GameObject heldPrefab;
+        [Tooltip("Swaps the held model's materials for their toon versions.")]
+        public ToonMaterialMap toonMap;
         public Vector3 heldLocalPosition = new Vector3(0.24f, -0.3f, 0.6f);
         public float heldScale = 2.2f;
 
@@ -24,6 +26,7 @@ namespace Chef24
                 visual.transform.localPosition = heldLocalPosition;
                 visual.transform.localRotation = Quaternion.Euler(0f, 160f, 0f);
                 visual.transform.localScale = Vector3.one * heldScale;
+                if (toonMap != null) toonMap.Apply(visual);
                 foreach (var c in visual.GetComponentsInChildren<Collider>()) Destroy(c);
             }
             if (visual != null) visual.SetActive(true);
