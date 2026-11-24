@@ -14,8 +14,8 @@ namespace Chef24
         public GameObject cookingVisual;
         public TimingMiniGame miniGame;
         [Tooltip("Seconds a finished batch can wait on the grill before it burns.")]
-        public float burnAfter = 25f;
-        public float warnAfter = 15f;
+        public float burnAfter = 12f;
+        public float warnAfter = 6f;
 
         public TimingMiniGame.Step[] steps =
         {

@@ -583,7 +583,7 @@ namespace Chef24
             Txt("Text", how.rect, Vector2.zero, Vector2.one, new Vector2(44, 22), new Vector2(-44, -22), 26, TextAlignmentOptions.Left, Palette.Brown, Style.Body).text =
                 "1.  손님을 보고 " + Key("E") + " 주문 받기   (" + Key("R") + " 거절)\n" +
                 "2.  그릴에서 " + Key("E") + ", 움직이는 막대를 " + Key("Space") + " 로 초록 칸에 멈추기\n" +
-                "3.  다 익으면 그릴에서 " + Key("E") + " 로 담기  (오래 두면 타요!)\n" +
+                "3.  다 익으면 그릴에서 " + Key("E") + " 로 담기  (12초 넘게 두면 타요!)\n" +
                 "4.  주문표대로 타코야끼 소스, 마요네즈, 파 넣기  (<color=" + Palette.Html(Palette.Red) + ">빼기</color> 표시는 넣지 말기)\n" +
                 "5.  손님을 보고 " + Key("E") + " 로 건네기\n" +
                 "6.  잠깐 둘 땐 카운터의 <color=" + Palette.Html(Palette.Mint) + ">초록 접시 자리</color>, 못 쓰는 건 쓰레기통";
