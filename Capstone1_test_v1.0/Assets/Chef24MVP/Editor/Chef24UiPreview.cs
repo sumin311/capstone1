@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 namespace Chef24.EditorTools
 {
@@ -80,11 +80,12 @@ namespace Chef24.EditorTools
             // 4. Result
             ui.ShowResult(true, "기숙사", 72000, 4000, 68000, 60000, 12, 2);
             ShowScreen(ui, "resultScreen", true);
-            GetField<Text>(ui, "resultProfit").text = Names.Won(68000);
+            GetField<TMP_Text>(ui, "resultProfit").text = Names.Won(68000);
             Shot(cam, outDir + "/5_result.png");
 
             Debug.Log("[Chef24] UI preview written to " + Path.GetFullPath(outDir));
-            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            // Reload the saved game scene (drops the preview-only objects) so the editor reopens on it next time.
+            EditorSceneManager.OpenScene("Assets/Chef24MVP/Chef24MVP.unity");
             if (Application.isBatchMode) EditorApplication.Exit(0);
         }
 
@@ -101,6 +102,7 @@ namespace Chef24.EditorTools
         {
             var rt = new RenderTexture(1920, 1080, 24);
             cam.targetTexture = rt;
+            foreach (var t in Object.FindObjectsOfType<TMP_Text>()) t.ForceMeshUpdate();
             Canvas.ForceUpdateCanvases();
             cam.Render();
             RenderTexture.active = rt;

@@ -175,7 +175,7 @@ namespace Chef24
             switch (state)
             {
                 case State.WaitingOrder: return head + "\n" + Order.menu.name + " 1인분 주세요\n" + Order.RequestText();
-                case State.WaitingFood: return head + "\n" + Order.menu.name + " · " + Order.ToppingsRichText();
+                case State.WaitingFood: return head + "\n" + Order.menu.name + " - " + Order.ToppingsRichText();
                 default: return null;
             }
         }

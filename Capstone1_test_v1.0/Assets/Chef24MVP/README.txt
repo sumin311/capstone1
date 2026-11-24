@@ -46,3 +46,15 @@ UI (2026-11-24 개편)
 - Tools 없이 화면 확인: Unity를 끈 상태에서
   Unity.exe -batchmode -quit -projectPath <프로젝트> -executeMethod Chef24.EditorTools.Chef24UiPreview.Run -previewOut <폴더>
   → 씬을 다시 만들고 시작/HUD/조리 바/결과 화면을 PNG로 저장 (말풍선 위치는 미리보기에서만 부정확)
+
+접시 자리 (2026-11-24 추가)
+- 앞 카운터의 초록 원 2곳. 음식을 들고 E = 내려놓기, 빈손으로 E = 집기, 둘 다 있으면 E = 바꾸기
+- 다른 손님 주문에 맞는 음식을 잠깐 놔두거나, 그릴의 다음 타코야끼를 꺼내기 전에 손을 비울 때 사용
+
+글꼴과 UI 스타일 (2026-11-24)
+- 팀 시안(글꼴테스트 이미지)의 느낌을 따름: 크림색 카드 + 진한 갈색 테두리, 주황 알약 버튼, 갈색 외곽선 제목 글자
+- 글꼴: Fonts/Jua-Regular.ttf(본문), Fonts/BlackHanSans-Regular.ttf(제목, 큰 숫자). Google Fonts, SIL OFL 1.1 (게임에 포함·재배포 가능, 글꼴 자체 판매 금지)
+  라이선스 원문: Fonts/*-OFL.txt. 글꼴테스트 이미지의 HS두꺼비체/원스토어/베라체는 설계용이라 게임에 넣지 않음
+- TextMeshPro 글꼴 에셋(Jua SDF, BlackHanSans SDF)과 외곽선 머티리얼은 Build MVP Scene이 없으면 자동으로 만듦
+  (동적 아틀라스라 새 한글이 나오면 플레이 중 자동으로 추가됨)
+- 이 두 글꼴에는 ✓ ✕ · → 기호가 없어서, 체크/엑스는 코드로 그린 아이콘 이미지로 표시함

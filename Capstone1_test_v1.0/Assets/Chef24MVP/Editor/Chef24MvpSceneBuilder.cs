@@ -122,6 +122,35 @@ namespace Chef24.EditorTools
                 bin.AddComponent<TrashBin>();
             }
 
+            // Plate spots on the front counter: put a dish down / pick it up / swap.
+            if (PartBounds(truck, "Front_Counter", out Bounds counter))
+            {
+                Material spotMat = MakeMaterial("Holding Spot", new Color(0.62f, 0.86f, 0.78f));
+                GameObject boat = FindModel("Takoyaki_Boat");
+                float[] along = { 0.35f, 0.65f };
+                for (int i = 0; i < along.Length; i++)
+                {
+                    var spot = new GameObject("Holding Spot " + (i + 1));
+                    spot.transform.SetParent(stations, false);
+                    spot.transform.position = SurfacePoint(counter, along[i]);
+                    var box = spot.AddComponent<BoxCollider>();
+                    box.isTrigger = true;
+                    box.center = new Vector3(0f, 0.15f, 0f);
+                    box.size = new Vector3(0.45f, 0.3f, 0.45f);
+                    var hs = spot.AddComponent<HoldingSpot>();
+                    hs.dishPrefab = boat;
+                    hs.dishScale = PropScale;
+
+                    var plate = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    plate.name = "Plate Mark";
+                    plate.transform.SetParent(spot.transform, false);
+                    plate.transform.localPosition = new Vector3(0f, 0.004f, 0f);
+                    plate.transform.localScale = new Vector3(0.26f, 0.004f, 0.26f);
+                    plate.GetComponent<Renderer>().sharedMaterial = spotMat;
+                    UnityEngine.Object.DestroyImmediate(plate.GetComponent<Collider>());
+                }
+            }
+
             // ---------------------------------------------------------------- customers
             Vector3 windowCenter = PartBounds(truck, "Service_Window", out Bounds wb) ? wb.center : fcb.center;
             Vector3 side = Vector3.Cross(Vector3.up, frontDir).normalized;
@@ -164,7 +193,13 @@ namespace Chef24.EditorTools
             spawner.spawnPoint = spawn;
             spawner.exitPoint = exit;
             spawner.faceDirection = -frontDir;
-            game.AddComponent<UIManager>();
+            var ui = game.AddComponent<UIManager>();
+            var fonts = Chef24Fonts.Ensure();
+            ui.bodyFont = fonts.body;
+            ui.titleFont = fonts.title;
+            ui.bodyOutline = fonts.bodyOutline;
+            ui.titleOutline = fonts.titleOutline;
+            if (!fonts.Ok) Debug.LogWarning("[Chef24] UI fonts are not ready yet. Run Tools > Chef24 > Build MVP Scene again.");
             var gm = game.AddComponent<GameManager>();
             gm.clock = clock;
             gm.player = pc;
@@ -265,6 +300,14 @@ namespace Chef24.EditorTools
             go.transform.position = axis * (along - Vector3.Dot(b.center, axis)) + depth * (dc - Vector3.Dot(b.center, depth))
                                     + Vector3.up * (surface.max.y - b.min.y);
             return go;
+        }
+
+        /// <summary>Top of a counter at fraction t along its long side, centred across its depth.</summary>
+        static Vector3 SurfacePoint(Bounds surface, float t)
+        {
+            bool alongX = surface.size.x >= surface.size.z;
+            float a = alongX ? Mathf.Lerp(surface.min.x + 0.15f, surface.max.x - 0.15f, t) : Mathf.Lerp(surface.min.z + 0.15f, surface.max.z - 0.15f, t);
+            return alongX ? new Vector3(a, surface.max.y, surface.center.z) : new Vector3(surface.center.x, surface.max.y, a);
         }
 
         /// <summary>Wraps visuals in a station root with a box collider so the player can aim at it.</summary>

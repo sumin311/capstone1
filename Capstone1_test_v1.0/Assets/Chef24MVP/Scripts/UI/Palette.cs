@@ -3,24 +3,27 @@ using UnityEngine;
 namespace Chef24
 {
     /// <summary>
-    /// Art bible (single colour source for the UI).
-    /// Style: warm, friendly food-truck street stall. Rounded cards, receipt-paper order tickets, chunky readable text.
-    /// Palette: taken from the truck itself (mint body, cream interior, red/white awning, warm lamp light).
-    /// Mood: late afternoon street, warm lamp inside the truck, cool shade outside.
+    /// Art bible (single colour source for the UI), following the team's title screen mock-up (글꼴테스트).
+    /// Style: cozy food-truck signboard. Cream cards with thick brown outlines, orange pill buttons,
+    ///        chunky rounded Korean lettering (Black Han Sans titles, Jua body).
+    /// Palette: cream / chocolate brown / takoyaki orange, with leaf green, gold and awning red as signals.
+    /// Mood: sunny campus afternoon, warm lamp inside the truck.
     /// </summary>
     public static class Palette
     {
-        public static readonly Color Ink = Hex(0x1F2430);        // panels, scrims (never pure black)
-        public static readonly Color InkSoft = Hex(0x2E3442);    // bar tracks, inner panels
-        public static readonly Color Paper = Hex(0xFFF4DE);      // order tickets, speech bubbles
-        public static readonly Color PaperDim = Hex(0xE9DCC2);   // empty chips on paper
-        public static readonly Color TextDark = Hex(0x2B2320);   // text on paper
-        public static readonly Color TextLight = Hex(0xFFF8EC);  // text on ink
-        public static readonly Color Muted = Hex(0x9A8F86);      // secondary text
-        public static readonly Color Mint = Hex(0x5CC8B0);       // truck body: neutral highlight
-        public static readonly Color Amber = Hex(0xF5B83D);      // accent: money, keys, perfect
-        public static readonly Color Leaf = Hex(0x7BCB5A);       // success, good, topping done
-        public static readonly Color Tomato = Hex(0xE8553D);     // awning red: danger, excluded, waste
+        public static readonly Color Cream = Hex(0xFFF6DF);      // cards, bubbles, title lettering
+        public static readonly Color CreamDark = Hex(0xF0E2C2);  // empty chips, bar tracks on cream
+        public static readonly Color Brown = Hex(0x4A2A17);      // outlines, borders, text on cream
+        public static readonly Color BrownSoft = Hex(0x8A6A52);  // secondary text on cream
+        public static readonly Color Orange = Hex(0xFF9F40);     // primary buttons, money
+        public static readonly Color Gold = Hex(0xFFC93C);       // perfect, highlight, keys
+        public static readonly Color Leaf = Hex(0x6DBE4B);       // success, done, open
+        public static readonly Color Red = Hex(0xE0503F);        // danger, excluded, waste
+        public static readonly Color Mint = Hex(0x5CC8B0);       // truck body: neutral info
+
+        // Older names still used by gameplay toasts.
+        public static Color Amber => Orange;
+        public static Color Tomato => Red;
 
         public static Color WithAlpha(Color c, float a) { c.a = a; return c; }
 
